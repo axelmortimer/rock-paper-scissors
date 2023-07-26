@@ -1,56 +1,54 @@
+const buttons = document.querySelectorAll('button');
+const playerScore = document.querySelector('.score-player');
+const computerScore = document.querySelector('.score-computer');
+const announcement = document.querySelector('.announcement');
+
+buttons.forEach((button) => {
+   button.addEventListener('click', () => {
+      playRound(button.id);
+   })
+});
+
 function getComputerChoice() {
    let choice;
    let randomNum = Math.floor(Math.random() * 3) + 1;
    switch (randomNum) {
       case 1:
-         choice='Rock';
+         choice='rock';
          break;
       case 2:
-         choice='Paper';
+         choice='paper';
          break;
       case 3:
-         choice='Scissors';
+         choice='scissors';
          break;
-      default:
-         console.log('Something broke!');
    }
    return choice;
 }
 
-function game() {
-   let playerSelection;
-   let computerSelection;
-   let round = 1;
-   let playerScore = 0;
-   let computerScore = 0;
+function playRound(playerSelection) {
 
-   function playRound() {
-      playerSelection = playerSelection.slice(0, 1).toUpperCase() + playerSelection.slice(1).toLowerCase();
-      if (playerSelection == computerSelection) {
-         return 'You Tied! ' + playerSelection + ' ties ' + computerSelection + '.';
-      } else if ((playerSelection == 'Rock' && computerSelection == 'Paper') || (playerSelection == 'Paper' && computerSelection == 'Scissors') || (playerSelection == 'Scissors' && computerSelection == 'Rock')) {
-         computerScore++;
-         return 'You Lose! ' + computerSelection + ' beats ' + playerSelection + '.';
+   let computerSelection = getComputerChoice();
+
+   if (playerSelection == computerSelection) {
+         announcement.textContent = "You Tied! " + playerSelection + " ties " + computerSelection + '.';
+   } else if (
+      (playerSelection == 'rock' && computerSelection == 'paper') ||
+      (playerSelection == 'paper' && computerSelection == 'scissors') || 
+      (playerSelection == 'scissors' && computerSelection == 'rock')
+      ) {
+         computerScore.textContent = (parseInt(computerScore.textContent) + 1) + '';
+         if (parseInt(computerScore.textContent) == 5) {
+            announcement.textContent = 'YOU LOST THE GAME!!! ' + computerSelection + ' beats ' + playerSelection + '.';
+         } else {
+            announcement.textContent = 'You Lose! ' + computerSelection + ' beats ' + playerSelection + '.';
+         }
+   } else {
+      playerScore.textContent = (parseInt(playerScore.textContent) + 1) + '';
+      if (parseInt(playerScore.textContent) == 5) {
+         announcement.textContent = 'YOU WON THE GAME!!! ' + playerSelection + ' beats ' + computerSelection + '.';
       } else {
-         playerScore++;
-         return 'You Won! ' + playerSelection + ' beats ' + computerSelection + '.';
+         announcement.textContent = 'You Win! ' + playerSelection + ' beats ' + computerSelection + '.';
       }
    }
-
-   while (round <= 5) {
-      playerSelection = prompt('Pick your sign:');
-      computerSelection = getComputerChoice();
-      console.log('ROUND ' + round + ': ' + playRound(playerSelection, computerSelection));
-      round++;
-   }
-
-   if (playerScore > computerScore) {
-      console.log('You won with a score of ' + playerScore + ' to ' + computerScore);
-   } else if (computerScore > playerScore) {
-      console.log('You lost with a score of ' + playerScore + ' to ' + computerScore);
-   } else {
-      console.log('You tied with a score of ' + playerScore + ' to ' + computerScore);
-   }
 }
-
-game();
